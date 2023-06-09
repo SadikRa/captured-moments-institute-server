@@ -67,6 +67,11 @@ async function run() {
     });
     
 
+    app.get('/users/instructor', async (req, res) =>{
+      const instructors = await usersCollection.find({ role: 'instructor' }).toArray();
+      res.send(instructors)
+    })
+
 
     app.patch('/users/admin/:id', async (req, res) => {
       const id = req.params.id;
@@ -102,6 +107,15 @@ async function run() {
       const query = { email: email }
       const user = await usersCollection.findOne(query);
       const result = { admin: user?.role === 'admin' }
+      res.send(result);
+    })
+
+
+    app.get('/users/instructor/:email', verifyJWT, async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email }
+      const user = await usersCollection.findOne(query);
+      const result = { instructor: user?.role === 'instructor' }
       res.send(result);
     })
 
