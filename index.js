@@ -97,6 +97,13 @@ async function run() {
 
     })
 
+    app.get('/users/admin/:email', verifyJWT, async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email }
+      const user = await usersCollection.findOne(query);
+      const result = { admin: user?.role === 'admin' }
+      res.send(result);
+    })
 
 
     app.post("/users", async (req, res) => {
@@ -117,6 +124,11 @@ async function run() {
       const newClass = req.body;
       const result = await classesCollection.insertOne(newClass)
       res.send(result);
+    })
+
+    app.get('/classes', verifyJWT, async (req, res) =>{
+      const result = await classesCollection.find().toArray()
+      res.send(result)
     })
 
     // Send a ping to confirm a successful connection
