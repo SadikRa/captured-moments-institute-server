@@ -164,7 +164,7 @@ async function run() {
       const filter = { _id: new ObjectId(id) };
       const updateDoc = {
         $set: {
-          status: 'deny'
+          status: 'denied'
         },
       };
 
@@ -172,6 +172,14 @@ async function run() {
       res.send(result);
 
     })
+
+
+    app.get('/classes/:email', async (req, res) =>{
+      const query  = req.params.email;
+      const result = await classesCollection.find({email: query}).toArray()
+      res.send(result)
+     })
+
 
     app.get('/sixClasses', async (req, res) =>{
       const result = await classesCollection.find().toArray()
