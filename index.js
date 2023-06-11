@@ -147,6 +147,11 @@ async function run() {
       res.send(result)
     })
 
+    app.get('/approveClasses', verifyJWT, async (req, res) =>{
+      const result = await classesCollection.find({status: 'approve'}).toArray()
+      res.send(result)
+    })
+
     app.patch('/classes/approve/:id', async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
@@ -184,7 +189,7 @@ async function run() {
 
 
     app.get('/sixClasses', async (req, res) =>{
-      const result = await classesCollection.find().toArray()
+      const result = await classesCollection.find({status: 'approve'}).toArray()
       res.send(result)
     })
 
@@ -237,6 +242,12 @@ async function run() {
       res.send({ insertResult, deleteResult });
     })
 
+    app.get('/history/:email', async(req, res) =>{
+      const email = req.params.email;
+      const query = { email: email };
+      const result = await paymentCollection.find(query).toArray();
+      res.send(result); 
+    })
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
